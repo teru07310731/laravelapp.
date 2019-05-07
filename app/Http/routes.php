@@ -26,23 +26,26 @@ Route::group(['middleware' => ['web']], function() {
 		]);
 	});
 	
-	Route::post('/book', ['middleware' => 'auth',function(Request $request) {
+	Route::post('/book', function(Request $request) {
 		$validator = Validator::make($request->all(), [
 			'name' => 'required|max:255',
 		]);
+
 		if($validator->fails()) {
 			return redirect('/')
 				->withInput()
 				->withErrors($validator);
 		}
+
 		$book =	new Book;
 		$book->title = $request->name;
 		$book->save();
+
 		return redirect('/');
-	}]);
-	Route::delete('/book/{book}', ['middleware' => 'auth', function(Book $book) {
+	});
+
+	Route::delete('/book/{book}', function(Book $book) {
 		$book->delete();
 		return redirect('/');
-	}]);
-	Route::auth();
+	});
 });
